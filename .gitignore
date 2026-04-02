@@ -20,3 +20,6 @@ debug/
 *.log
 .cache/
 logs/
+
+# Internal docs
+STREAMDECK_ICON_PREPARATION_GUIDE.md
