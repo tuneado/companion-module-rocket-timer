@@ -1,6 +1,6 @@
 # companion-module-rocket-timer
 
-Bitfocus Companion module for controlling the **Rocket Timer** countdown application.
+Bitfocus Companion module for controlling the [**Rocket Timer**](https://github.com/tuneado/Rocket-Timer) countdown application.
 
 ## Features
 
@@ -51,7 +51,7 @@ companion/
 
 ## API Compatibility
 
-Requires Rocket Timer v2.0.0+ with the Unified API server enabled (REST port 9999, WebSocket port 8080).
+Requires [Rocket Timer](https://github.com/tuneado/Rocket-Timer) v1.0.0+ with the Unified API server enabled (REST port 9999, WebSocket port 8080).
 
 ## License
 
