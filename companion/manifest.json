@@ -1,0 +1,32 @@
+{
+  "$schema": "../node_modules/@companion-module/base/assets/manifest.schema.json",
+  "id": "rocket-timer",
+  "name": "Rocket Timer",
+  "shortname": "Rocket Timer",
+  "legacyIds": [],
+  "description": "Control Rocket Timer countdown application via REST and WebSocket APIs",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": "git+https://github.com/tuneado/companion-module-rocket-timer.git",
+  "bugs": "https://github.com/tuneado/companion-module-rocket-timer/issues",
+  "maintainers": [
+    {
+      "name": "Andre Raimundo"
+    }
+  ],
+  "runtime": {
+    "type": "node22",
+    "api": "nodejs-ipc",
+    "apiVersion": "0.0.0",
+    "entrypoint": "../main.js"
+  },
+  "manufacturer": "Rocket Timer",
+  "products": [
+    "Countdown Timer"
+  ],
+  "keywords": [
+    "timer",
+    "countdown",
+    "broadcast"
+  ]
+}

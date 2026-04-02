@@ -1,0 +1,37 @@
+{
+  "name": "companion-module-rocket-timer",
+  "version": "1.0.0",
+  "description": "Bitfocus Companion module for Rocket Timer countdown application",
+  "main": "src/main.js",
+  "type": "commonjs",
+  "scripts": {
+    "package": "companion-module-build",
+    "dev": "companion-module-build --dev",
+    "lint": "eslint ."
+  },
+  "engines": {
+    "node": "^22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuneado/companion-module-rocket-timer"
+  },
+  "keywords": [
+    "bitfocus",
+    "companion",
+    "rocket-timer",
+    "countdown",
+    "timer",
+    "broadcast"
+  ],
+  "author": "50hz Event Solutions / Andre Raimundo",
+  "license": "MIT",
+  "dependencies": {
+    "@companion-module/base": "~1.14.1",
+    "axios": "^1.6.7",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@companion-module/tools": "^2.6.1"
+  }
+}

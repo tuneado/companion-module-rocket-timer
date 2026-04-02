@@ -1,0 +1,22 @@
+node_modules/
+*.tar.gz
+*.tgz
+*.companionmodule
+.DS_Store
+pkg/
+dist/
+debug/
+
+# Environment
+.env*
+
+# Backup & temp files
+*.bak
+*.backup
+*.tmp
+**/backup/
+
+# Logs & cache
+*.log
+.cache/
+logs/
