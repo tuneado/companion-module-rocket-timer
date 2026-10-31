@@ -62,7 +62,7 @@ This module controls the **Rocket Timer** countdown application via its REST and
 - **Timer Stopped** — Changes button colour when the timer is stopped
 - **Timer Overtime** — Changes button colour when the timer has gone past zero
 - **Warning Level** — Changes button colour based on warning state (normal, warning, critical, overtime)
-- **Flash Active** — Changes button colour while the screen is flashing (the Flash preset turns red)
+- **Flash Active** — Changes button colour while the screen is flashing (the Flash preset turns red). With Rocket Timer before 1.2.4, it only follows flashes started through the API, for their usual 1.8 seconds.
 - **Sound Muted** — Changes button colour when sound is muted
 - **Message Visible** — Changes button colour when the message overlay is shown
 - **Feature Image Enabled** — Changes button colour when the feature image is active
@@ -95,4 +95,4 @@ This module controls the **Rocket Timer** countdown application via its REST and
 | `preset_1_time` … `preset_8_time`       | Preset time (MM:SS, or H:MM:SS from 1 hour) |
 | `preset_1_seconds` … `preset_8_seconds` | Preset time in seconds                     |
 
-Preset names and times update as soon as they're edited in Rocket Timer. Older Rocket Timer versions don't announce preset edits, so with those the module re-reads them every 10 seconds instead.
+Preset names and times update as soon as they're edited in Rocket Timer 1.2.4 or newer. Older Rocket Timer versions don't announce preset edits, so with those the module re-reads them every 10 seconds instead.

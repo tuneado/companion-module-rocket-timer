@@ -1,6 +1,6 @@
 {
   "name": "companion-module-rocket-timer",
-  "version": "1.2.0-dev",
+  "version": "1.2.0",
   "description": "Bitfocus Companion module for Rocket Timer countdown application",
   "main": "src/main.js",
   "type": "commonjs",

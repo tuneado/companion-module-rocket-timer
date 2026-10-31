@@ -55,7 +55,7 @@ companion/
 
 ## API Compatibility
 
-Requires [Rocket Timer](https://github.com/tuneado/Rocket-Timer) v1.0.0+ with the Unified API server enabled (REST port 9999, WebSocket port 8080).
+Requires [Rocket Timer](https://github.com/tuneado/Rocket-Timer) v1.0.0+ with the Unified API server enabled (REST port 9999, WebSocket port 8080). Rocket Timer v1.2.4+ is needed for instant preset label updates and exact flash feedback.
 
 Requires Bitfocus Companion 4.2 or newer.
 
