@@ -2,6 +2,8 @@
 
 Bitfocus Companion module for controlling the [**Rocket Timer**](https://github.com/tuneado/Rocket-Timer) countdown application.
 
+Download Rocket Timer at [rockettimer-app.50-hz.com](https://rockettimer-app.50-hz.com).
+
 ## Features
 
 - Full timer control (start, stop, pause, resume, reset, toggle)
