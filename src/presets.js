@@ -211,6 +211,38 @@ function getPresets(_self) {
 		],
 	}
 
+	presets['time_remaining_bar'] = {
+		type: 'button',
+		category: 'Timer Display',
+		name: 'Time Remaining + Bar',
+		style: {
+			text: '$(rocket-timer:formatted_time)',
+			size: '14',
+			color: COLORS.white,
+			bgcolor: COLORS.dark,
+		},
+		steps: [
+			{
+				down: [],
+				up: [],
+			},
+		],
+		feedbacks: [
+			{
+				feedbackId: 'warning_color_text',
+				options: {},
+			},
+			{
+				feedbackId: 'progress_bar',
+				options: {
+					barHeight: 8,
+					barColor: 'warning_color',
+					bgColor: COLORS.grey,
+				},
+			},
+		],
+	}
+
 	presets['time_elapsed'] = {
 		type: 'button',
 		category: 'Timer Display',

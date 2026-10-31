@@ -15,6 +15,7 @@ Download Rocket Timer at [rockettimer-app.50-hz.com](https://rockettimer-app.50-
 - Display effects (flash, feature image toggle)
 - Real-time state feedback via WebSocket
 - Dynamic warning color feedbacks (background and text) driven by API
+- Progress bar feedback showing remaining time
 - Dynamic variables for button text
 
 ## Development
@@ -54,6 +55,8 @@ companion/
 ## API Compatibility
 
 Requires [Rocket Timer](https://github.com/tuneado/Rocket-Timer) v1.0.0+ with the Unified API server enabled (REST port 9999, WebSocket port 8080).
+
+Requires Bitfocus Companion 4.2 or newer.
 
 ## License
 

@@ -70,6 +70,7 @@ This module controls the **Rocket Timer** countdown application via its REST and
 ### Advanced Feedbacks
 - **Warning Color (Background)** — Dynamically sets button background to the current timer warning colour from the API (green → amber → red → dark red)
 - **Warning Color (Text)** — Dynamically sets button text colour to the current timer warning colour from the API
+- **Progress Bar** — Draws a bar along the top of the button showing the remaining time. The bar can follow the warning colour, use green, or use a custom colour, and its height is adjustable. The **Time Remaining + Bar** preset uses it.
 
 ## Variables
 
