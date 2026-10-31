@@ -141,6 +141,20 @@ function getFeedbacks(self) {
 			},
 		},
 
+		flash_active: {
+			type: 'boolean',
+			name: 'Flash Active',
+			description: 'True while the screen is flashing',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 71, 87),
+				color: combineRgb(255, 255, 255),
+			},
+			options: [],
+			callback: () => {
+				return self.timerState.isFlashing === true
+			},
+		},
+
 		sound_muted: {
 			type: 'boolean',
 			name: 'Sound Muted',

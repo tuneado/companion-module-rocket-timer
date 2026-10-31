@@ -6,6 +6,13 @@ const { getFeedbacks } = require('./feedbacks')
 const { getPresets } = require('./presets')
 const upgradeScripts = require('./upgrades')
 
+// Rocket Timer has 8 preset slots
+const PRESET_COUNT = 8
+
+// How long the app's flash lasts (3 cycles of 600 ms). Only used with app versions
+// that don't send flash-state events.
+const FLASH_FALLBACK_MS = 1800
+
 class RocketTimerInstance extends InstanceBase {
 	constructor(internal) {
 		super(internal)
@@ -30,7 +37,15 @@ class RocketTimerInstance extends InstanceBase {
 			messageText: '',
 			featureImageEnabled: false,
 			soundMuted: false,
+			isFlashing: false,
 		}
+
+		// Set once the app sends a flash-state event (newer app versions)
+		this.appReportsFlashState = false
+		this.flashFallbackTimer = null
+
+		// Timer presets from the app, as { id, name, time } with time in seconds
+		this.timerPresets = []
 
 		this.ws = null
 		this.wsReconnectTimer = null
@@ -69,6 +84,7 @@ class RocketTimerInstance extends InstanceBase {
 
 	async destroy() {
 		this.disconnectWebSocket()
+		clearTimeout(this.flashFallbackTimer)
 
 		if (this.pollTimer) {
 			clearInterval(this.pollTimer)
@@ -134,6 +150,7 @@ class RocketTimerInstance extends InstanceBase {
 			this.checkFeedbacks('connection_state')
 			this.fetchLayouts()
 			this.checkRestHealth()
+			this.startPresetPolling()
 		})
 
 		this.ws.on('message', (raw) => {
@@ -143,6 +160,8 @@ class RocketTimerInstance extends InstanceBase {
 		this.ws.on('close', () => {
 			this.log('warn', 'WebSocket disconnected')
 			this.connected = false
+			this.stopPresetPolling()
+			this.setFlashing(false)
 			this.updateStatus(InstanceStatus.Disconnected)
 			this.setVariableValues({ connection: 'Disconnected' })
 			this.checkFeedbacks('connection_state')
@@ -163,6 +182,8 @@ class RocketTimerInstance extends InstanceBase {
 			clearTimeout(this.wsReconnectTimer)
 			this.wsReconnectTimer = null
 		}
+
+		this.stopPresetPolling()
 
 		if (this.ws) {
 			this.ws.removeAllListeners()
@@ -220,7 +241,6 @@ class RocketTimerInstance extends InstanceBase {
 			case 'time-component-set':
 			case 'time-adjusted':
 			case 'preset-load-requested':
-			case 'flash-requested':
 			case 'feature-image-toggled':
 			case 'feature-image-set':
 			case 'layout-changed':
@@ -228,6 +248,27 @@ class RocketTimerInstance extends InstanceBase {
 			case 'message-hidden':
 			case 'message-toggled':
 				this.log('debug', `WS event: ${type}`)
+				break
+
+			case 'flash-state':
+				this.appReportsFlashState = true
+				this.setFlashing(data?.isFlashing === true)
+				break
+
+			case 'flash-requested':
+				// Older app versions only announce the start, so assume the usual length
+				if (!this.appReportsFlashState) {
+					this.setFlashing(true)
+					clearTimeout(this.flashFallbackTimer)
+					this.flashFallbackTimer = setTimeout(() => this.setFlashing(false), FLASH_FALLBACK_MS)
+				}
+				break
+
+			case 'presets-updated':
+				if (Array.isArray(data)) {
+					this.timerPresets = data
+					this.updatePresetVariables()
+				}
 				break
 
 			case 'sound-muted':
@@ -282,6 +323,8 @@ class RocketTimerInstance extends InstanceBase {
 			messageText: data.messageText ?? '',
 			featureImageEnabled: data.featureImageEnabled ?? false,
 			soundMuted: data.soundMuted ?? this.timerState.soundMuted ?? false,
+			// Not part of timer updates; comes from flash-state events
+			isFlashing: this.timerState.isFlashing,
 		}
 
 		this.updateVariablesFromState()
@@ -299,6 +342,16 @@ class RocketTimerInstance extends InstanceBase {
 			'sound_muted',
 			'connection_state',
 		)
+	}
+
+	setFlashing(isFlashing) {
+		if (!isFlashing) {
+			clearTimeout(this.flashFallbackTimer)
+			this.flashFallbackTimer = null
+		}
+		if (this.timerState.isFlashing === isFlashing) return
+		this.timerState.isFlashing = isFlashing
+		this.checkFeedbacks('flash_active')
 	}
 
 	getTimerStateLabel() {
@@ -377,6 +430,52 @@ class RocketTimerInstance extends InstanceBase {
 		}
 	}
 
+	// The app sends no event when presets are edited, so re-read them while connected
+	startPresetPolling() {
+		this.stopPresetPolling()
+		this.fetchPresets()
+		this.pollTimer = setInterval(() => this.fetchPresets(), 10000)
+	}
+
+	stopPresetPolling() {
+		if (this.pollTimer) {
+			clearInterval(this.pollTimer)
+			this.pollTimer = null
+		}
+	}
+
+	async fetchPresets() {
+		const result = await this.restGet('/presets')
+		if (result && result.success && Array.isArray(result.data)) {
+			this.timerPresets = result.data
+			this.updatePresetVariables()
+		}
+	}
+
+	// 05:00 under an hour, 1:30:00 from an hour up
+	formatPresetTime(seconds) {
+		const total = Math.max(0, Math.round(seconds))
+		const h = Math.floor(total / 3600)
+		const m = Math.floor((total % 3600) / 60)
+		const s = total % 60
+		const mmss = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`
+		return h > 0 ? `${h}:${mmss}` : mmss
+	}
+
+	updatePresetVariables() {
+		const values = {}
+		for (let i = 0; i < PRESET_COUNT; i++) {
+			const preset = this.timerPresets[i]
+			// Older API docs call the field duration
+			const seconds = preset ? this.toNumber(preset.time ?? preset.duration, NaN) : NaN
+			const hasTime = Number.isFinite(seconds)
+			values[`preset_${i + 1}_name`] = preset?.name ?? ''
+			values[`preset_${i + 1}_time`] = hasTime ? this.formatPresetTime(seconds) : ''
+			values[`preset_${i + 1}_seconds`] = hasTime ? Math.round(seconds) : ''
+		}
+		this.setVariableValues(values)
+	}
+
 	async checkRestHealth() {
 		const result = await this.restGet('/health')
 		if (!result || !result.success) {
@@ -414,9 +513,15 @@ class RocketTimerInstance extends InstanceBase {
 			{ variableId: 'timer_name', name: 'Timer Name' },
 			{ variableId: 'state', name: 'Timer State' },
 			{ variableId: 'connection', name: 'Connection Status' },
+			...Array.from({ length: PRESET_COUNT }, (_, i) => [
+				{ variableId: `preset_${i + 1}_name`, name: `Preset ${i + 1} Name` },
+				{ variableId: `preset_${i + 1}_time`, name: `Preset ${i + 1} Time (MM:SS)` },
+				{ variableId: `preset_${i + 1}_seconds`, name: `Preset ${i + 1} Time (seconds)` },
+			]).flat(),
 		])
 
 		this.updateVariablesFromState()
+		this.updatePresetVariables()
 	}
 }
 

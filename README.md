@@ -8,7 +8,7 @@ Download Rocket Timer at [rockettimer-app.50-hz.com](https://rockettimer-app.50-
 
 - Full timer control (start, stop, pause, resume, reset, toggle)
 - Time management (set time, adjust, add/subtract minutes)
-- Preset loading (8 presets)
+- Preset loading (8 presets), with each button showing the preset's name and time from the app
 - Layout switching (classic, minimal, clockfocus, detailed, circular, video)
 - Message overlays (send, show, set text, toggle)
 - Sound control (mute/unmute/toggle) with muted state feedback
@@ -16,6 +16,7 @@ Download Rocket Timer at [rockettimer-app.50-hz.com](https://rockettimer-app.50-
 - Real-time state feedback via WebSocket
 - Dynamic warning color feedbacks (background and text) driven by API
 - Progress bar feedback showing remaining time
+- Flash, sound and feature image presets use the same icons as the Rocket Timer app
 - Dynamic variables for button text
 
 ## Development

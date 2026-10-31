@@ -1,4 +1,5 @@
 const { combineRgb } = require('@companion-module/base')
+const { ICONS } = require('./icons')
 
 // Colors matching Rocket Timer UI design tokens
 const COLORS = {
@@ -313,14 +314,14 @@ function getPresets(_self) {
 			category: 'Presets',
 			name: `Preset ${i + 1}`,
 			style: {
-				text: `PRESET\\n${i + 1}`,
-				size: '14',
+				text: `$(rocket-timer:preset_${i + 1}_name)\\n$(rocket-timer:preset_${i + 1}_time)`,
+				size: 'auto',
 				color: COLORS.white,
 				bgcolor: COLORS.darkSurface,
 			},
 			steps: [
 				{
-					down: [{ actionId: 'load_preset', options: { presetId: String(i) } }],
+					down: [{ actionId: 'load_preset', options: { presetId: i } }],
 					up: [],
 				},
 			],
@@ -521,8 +522,10 @@ function getPresets(_self) {
 		category: 'Sound',
 		name: 'Sound On/Off',
 		style: {
-			text: 'SOUND\nON',
+			text: 'SOUND',
 			size: '14',
+			alignment: 'center:bottom',
+			png64: ICONS.soundOn,
 			color: COLORS.white,
 			bgcolor: COLORS.black,
 		},
@@ -536,7 +539,8 @@ function getPresets(_self) {
 			{
 				feedbackId: 'sound_muted',
 				style: {
-					text: 'SOUND\nOFF',
+					text: 'MUTED',
+					png64: ICONS.soundMuted,
 					bgcolor: COLORS.danger,
 					color: COLORS.white,
 				},
@@ -552,7 +556,9 @@ function getPresets(_self) {
 		name: 'Flash',
 		style: {
 			text: 'FLASH',
-			size: '18',
+			size: '14',
+			alignment: 'center:bottom',
+			png64: ICONS.flash,
 			color: COLORS.white,
 			bgcolor: COLORS.black,
 		},
@@ -562,7 +568,15 @@ function getPresets(_self) {
 				up: [],
 			},
 		],
-		feedbacks: [],
+		feedbacks: [
+			{
+				feedbackId: 'flash_active',
+				style: {
+					bgcolor: COLORS.danger,
+					color: COLORS.white,
+				},
+			},
+		],
 	}
 
 	presets['toggle_feature_image'] = {
@@ -570,8 +584,10 @@ function getPresets(_self) {
 		category: 'Display Effects',
 		name: 'Feature Image',
 		style: {
-			text: 'FEATURE\\nIMAGE',
+			text: 'IMAGE',
 			size: '14',
+			alignment: 'center:bottom',
+			png64: ICONS.image,
 			color: COLORS.white,
 			bgcolor: COLORS.darkSurface,
 		},
@@ -585,6 +601,7 @@ function getPresets(_self) {
 			{
 				feedbackId: 'feature_image_enabled',
 				style: {
+					png64: ICONS.imageOn,
 					bgcolor: COLORS.success,
 					color: COLORS.white,
 				},
